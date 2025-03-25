@@ -251,3 +251,47 @@ npm run dev
 - [ ] UIテーマのダークモード対応
 - [ ] D3.js 描画部分のパフォーマンス最適化（仮想レンダリング）
 - [ ] Web Worker を用いた構文解析処理の並列化
+      
+live-tree/
+├── server/                         # バックエンド（FastAPI + Watchdog）
+│   ├── main.py                    # エントリーポイント（API & WebSocket & 監視）
+│   ├── file_watcher.py           # watchdog によるディレクトリ監視処理
+│   ├── tree_builder.py           # ツリー構造構築ロジック
+│   ├── comments_manager.py       # コメント読み書き（.dir_comments.json）
+│   ├── websocket.py              # WebSocket接続管理
+│   ├── analyzers/                # 処理フローの解析系（Phase 2）
+│   │   ├── ts_analyzer.py        # ts-morphベースのTSコード依存解析
+│   │   ├── py_analyzer.py        # astベースのPythonコード解析
+│   │   └── flow_graph.py         # 共通グラフデータ構造生成
+│   └── utils/                    # 汎用ユーティリティ
+│       └── path_utils.py
+│
+├── web/                           # フロントエンド（React + D3.js + Zustand）
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── src/
+│   │   ├── main.tsx              # Reactエントリポイント
+│   │   ├── App.tsx               # ルーティングとレイアウト
+│   │   ├── stores/               # Zustandステート管理
+│   │   ├── components/           # 共通UIコンポーネント
+│   │   │   ├── DirectoryTree.tsx # ツリー構造の表示・編集
+│   │   │   ├── CommentEditor.tsx # コメント編集UI
+│   │   │   ├── GraphView.tsx     # D3での可視化ビュー（Phase 2）
+│   │   │   └── ToggleButtons.tsx # Directory / Flow切替
+│   │   ├── hooks/                # カスタムフック
+│   │   ├── api/                  # バックエンド通信処理
+│   │   │   └── websocket.ts
+│   │   └── styles/               # Tailwind拡張 or グローバルCSS
+│   │       └── globals.css
+│   └── public/
+│       └── favicon.svg
+│
+├── cli/                           # CLIコマンド（将来的に分離可能）
+│   └── live_tree.py              # `live-tree` 実行時のエントリポイント
+│
+├── .dir_comments.json            # コメント情報を格納（プロジェクトルートに配置）
+├── README.md
+├── package.json
+├── pyproject.toml                # Python依存管理（Poetry or pip）
+└── .gitignore
+
